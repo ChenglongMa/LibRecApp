@@ -1,10 +1,10 @@
 import org.apache.commons.cli.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 public class Main {
-    private static final Logger log = LogManager.getLogger();
+    private static final Log LOG = LogFactory.getLog(Main.class);
     private static String dataName = Config.getDatasets().get(0);
     private static int cv = 10;
     private static boolean split = false;
@@ -57,16 +57,17 @@ public class Main {
      * @param args
      */
     private static void buildCli(String[] args) {
-        log.info("reading command line options");
+        LOG.info("reading command line options");
         Options options = buildOpts();
 
         // build the parser
         CommandLineParser parser = new DefaultParser();
-
         CommandLine cmd;
         try {
+            // verify the input commands
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
+            // print usage and exit
             help(options);
             return;
         }
@@ -77,14 +78,14 @@ public class Main {
             if (!Config.getDatasets().contains(dataName)) {
                 help(options);
             }
-            log.info("The processed dataset: " + dataName);
+            LOG.info("The processed dataset: " + dataName);
             switch (dataName) {
                 //todo
             }
         }
         if (cmd.hasOption(Opt.CV)) {
             cv = Integer.parseInt(cmd.getOptionValue(Opt.CV));
-            log.info("cv: " + cv);
+            LOG.info("cv: " + cv);
         }
 
         split = cmd.hasOption(Opt.SPLIT);
@@ -93,7 +94,7 @@ public class Main {
     public static void main(String[] args) {
         buildCli(args);
         System.out.println(Config.getDatasets().get(0));
-        log.info("starting server");
+        LOG.info("starting server");
     }
 
     private static class Opt {
