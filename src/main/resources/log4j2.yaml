@@ -1,0 +1,44 @@
+Configuration:
+  status: warn
+  name: default
+  properties:
+    property:
+      name: filename
+      value: ./log/LibRecApp.log
+
+  thresholdFilter:
+    level: debug
+
+  appenders:
+    Console:
+      name: STDOUT
+      PatternLayout:
+        Pattern: "%d %p %C{1.} [%t] %m%n"
+      Filters:
+        ThresholdFilter:
+          level: debug
+    File:
+      name: File
+      fileName: ${filename}
+      PatternLayout:
+        Pattern: "%d %p %C{1.} [%t] %m%n"
+      Filters:
+        ThresholdFilter:
+          level: debug
+
+  Loggers:
+    logger:
+    - name: Main
+      level: debug
+      additivity: true
+      AppenderRef:
+        ref: STDOUT
+    - name: Main
+      level: info
+      additivity: true
+      AppenderRef:
+        ref: File
+    Root:
+      level: debug
+      AppenderRef:
+        ref: STDOUT
