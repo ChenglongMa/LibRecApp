@@ -60,6 +60,7 @@ public class Job implements Runnable {
         @Override
         public void saveResult(List<RecommendedItem> recommendedList) throws LibrecException, IOException, ClassNotFoundException {
             super.saveResult(recommendedList);
+
         }
     }
 }

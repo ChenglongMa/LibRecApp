@@ -56,16 +56,16 @@
             <artifactId>commons-cli</artifactId>
             <version>1.4</version>
         </dependency>
-        <dependency>
-            <groupId>com.typesafe</groupId>
-            <artifactId>config</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-configuration2</artifactId>
-            <version>RELEASE</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.typesafe</groupId>-->
+            <!--<artifactId>config</artifactId>-->
+            <!--<version>RELEASE</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.commons</groupId>-->
+            <!--<artifactId>commons-configuration2</artifactId>-->
+            <!--<version>RELEASE</version>-->
+        <!--</dependency>-->
 
         <!--<dependency>-->
             <!--<groupId>commons-beanutils</groupId>-->
@@ -73,6 +73,35 @@
             <!--<version>RELEASE</version>-->
         <!--</dependency>-->
     </dependencies>
+    <build>
+        <plugins>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>me.rec.Main</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>

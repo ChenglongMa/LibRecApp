@@ -11,7 +11,6 @@ import java.util.Properties;
 public class Main {
     private static final Logger LOG = LogManager.getLogger(Main.class);
 
-
     /**
      * The main entry of the program
      *
