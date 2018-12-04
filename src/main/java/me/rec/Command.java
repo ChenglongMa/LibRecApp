@@ -5,6 +5,7 @@ import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -18,7 +19,7 @@ public class Command {
     private int cv;
     private boolean split;
 
-    public Command() {
+    public Command() throws IOException {
         Config defConf = new Config();
         defDatasets = defConf.getDatasets();
         defRecommenders = defConf.getRecommenders();
