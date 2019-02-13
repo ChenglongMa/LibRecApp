@@ -61,15 +61,42 @@ public class Job implements Runnable {
 
     }
 
+    @Deprecated
     private class CustomJob extends RecommenderJob {
+        private final Configuration conf;
 
         public CustomJob(Configuration conf) {
             super(conf);
+            this.conf = conf;
         }
 
         @Override
         public void saveResult(List<RecommendedItem> recommendedList) throws LibrecException, IOException, ClassNotFoundException {
             super.saveResult(recommendedList);
+//            if (recommendedList != null && recommendedList.size() > 0) {
+//                // make output path
+//                String algoSimpleName = DriverClassUtil.getDriverName(getRecommenderClass());
+//                String outputPath = conf.get("dfs.result.dir") + "/" + conf.get("data.input.path") + "-" + algoSimpleName + "-output/" + algoSimpleName;
+//                if (null != dataModel && (dataModel.getDataSplitter() instanceof KCVDataSplitter || dataModel.getDataSplitter() instanceof LOOCVDataSplitter) && null != conf.getInt("data.splitter.cv.index")) {
+//                    outputPath = outputPath + "-" + String.valueOf(conf.getInt("data.splitter.cv.index"));
+//                }
+//                LOG.info("Result path is " + outputPath);
+//                // convert itemList to string
+//                StringBuilder sb = new StringBuilder();
+//                for (RecommendedItem recItem : recommendedList) {
+//                    String userId = recItem.getUserId();
+//                    String itemId = recItem.getItemId();
+//                    String value = String.valueOf(recItem.getValue());
+//                    sb.append(userId).append(",").append(itemId).append(",").append(value).append("\n");
+//                }
+//                String resultData = sb.toString();
+//                // save resultData
+//                try {
+//                    FileUtil.writeString(outputPath, resultData);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
 
         }
     }
