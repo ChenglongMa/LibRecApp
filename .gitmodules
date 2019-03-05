@@ -1,0 +1,4 @@
+[submodule "lib/librec"]
+	path = lib/librec
+	url = https://github.com/guoguibing/librec.git
+	branch = 3.0.0

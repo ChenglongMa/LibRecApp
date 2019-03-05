@@ -12,14 +12,21 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
-
+    <!--<modules>-->
+        <!--<module>lib/librec/core</module>-->
+    <!--</modules>-->
     <dependencies>
+
+        <dependency>
+            <groupId>net.librec</groupId>
+            <artifactId>librec</artifactId>
+            <version>3.0.0</version>
+        </dependency>
         <dependency>
             <groupId>net.librec</groupId>
             <artifactId>librec-core</artifactId>
-            <version>RELEASE</version>
+            <version>3.0.0</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
