@@ -1,5 +1,8 @@
 target/
 release/
+result/
+out/
+lib/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -10,7 +13,7 @@ buildNumber.properties
 .mvn/timing.properties
 log/
 .idea/
-.iml
+*.iml
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
