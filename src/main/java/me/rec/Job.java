@@ -53,6 +53,7 @@ public class Job implements Runnable {
                         job.runJob();
                     } catch (Exception e) {
                         LOG.error(e);
+                        e.printStackTrace();
                     }
                 }
             } catch (Exception e) {
