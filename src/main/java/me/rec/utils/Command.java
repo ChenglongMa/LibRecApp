@@ -1,4 +1,4 @@
-package me.rec;
+package me.rec.utils;
 
 import net.librec.util.StringUtil;
 //import org.apache.commons.cli.*;

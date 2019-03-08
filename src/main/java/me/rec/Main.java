@@ -1,5 +1,6 @@
 package me.rec;
 
+import me.rec.utils.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

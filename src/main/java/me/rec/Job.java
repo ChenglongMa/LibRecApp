@@ -1,15 +1,14 @@
 package me.rec;
 
-import net.librec.common.LibrecException;
-import net.librec.conf.Configuration;
+import me.rec.utils.Config;
+import me.rec.utils.ModelBuilder;
 import net.librec.job.RecommenderJob;
-import net.librec.recommender.item.RecommendedItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -45,7 +44,9 @@ public class Job implements Runnable {
                     FileReader recFile = config.getPropertyFile(rec);
                     recProp.putAll(dataProp);
                     recProp.load(recFile);
+                    // override default configuration
                     config = new Config(recProp);
+                    buildFile(config);
                     RecommenderJob job = new RecommenderJob(config);
                     LOG.info(String.format("Running <%s> job for <%s>", rec, dataset));
                     try {
@@ -61,43 +62,21 @@ public class Job implements Runnable {
 
     }
 
-    @Deprecated
-    private class CustomJob extends RecommenderJob {
-        private final Configuration conf;
-
-        public CustomJob(Configuration conf) {
-            super(conf);
-            this.conf = conf;
+    private void buildFile(Config conf) throws IOException, NoSuchFieldException {
+        String format = conf.get(Config.MODEL_FORMAT);
+        String pathKey;
+        switch (format) {
+            default:
+            case Config.ModelFormat.TEXT:
+                pathKey = Config.TEXT_INPUT_PATH;
+                break;
+            case Config.ModelFormat.ARFF:
+                pathKey = Config.ARFF_INPUT_PATH;
+                break;
         }
-
-        @Override
-        public void saveResult(List<RecommendedItem> recommendedList) throws LibrecException, IOException, ClassNotFoundException {
-            super.saveResult(recommendedList);
-//            if (recommendedList != null && recommendedList.size() > 0) {
-//                // make output path
-//                String algoSimpleName = DriverClassUtil.getDriverName(getRecommenderClass());
-//                String outputPath = conf.get("dfs.result.dir") + "/" + conf.get("data.input.path") + "-" + algoSimpleName + "-output/" + algoSimpleName;
-//                if (null != dataModel && (dataModel.getDataSplitter() instanceof KCVDataSplitter || dataModel.getDataSplitter() instanceof LOOCVDataSplitter) && null != conf.getInt("data.splitter.cv.index")) {
-//                    outputPath = outputPath + "-" + String.valueOf(conf.getInt("data.splitter.cv.index"));
-//                }
-//                LOG.info("Result path is " + outputPath);
-//                // convert itemList to string
-//                StringBuilder sb = new StringBuilder();
-//                for (RecommendedItem recItem : recommendedList) {
-//                    String userId = recItem.getUserId();
-//                    String itemId = recItem.getItemId();
-//                    String value = String.valueOf(recItem.getValue());
-//                    sb.append(userId).append(",").append(itemId).append(",").append(value).append("\n");
-//                }
-//                String resultData = sb.toString();
-//                // save resultData
-//                try {
-//                    FileUtil.writeString(outputPath, resultData);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
-        }
+        // convert to target formatted file
+        ModelBuilder.build(conf, format);
+        String inputPath = conf.get(pathKey);
+        conf.set(Config.DATA_INPUT_PATH, inputPath);
     }
 }
