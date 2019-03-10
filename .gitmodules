@@ -1,4 +1,4 @@
 [submodule "lib/librec"]
 	path = lib/librec
-	url = https://github.com/ChenglongMa/librec.git
+	url = git@github.com:ChenglongMa/librec.git
 	branch = 3.0.0
