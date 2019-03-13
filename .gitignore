@@ -14,6 +14,8 @@ buildNumber.properties
 log/
 .idea/
 *.iml
+relase/
+classes/
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
