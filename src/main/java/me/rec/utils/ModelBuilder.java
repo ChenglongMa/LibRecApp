@@ -22,9 +22,12 @@ public class ModelBuilder {
         String[] paths = getPaths(config, modelFormat);
         String src = paths[0];
         String res = paths[1];
-        if (new File(res).exists()) {
+        if (FileUtil.exist(res)) {
             LOG.info("Such result file has existed.");
             return;
+        }
+        if (!FileUtil.exist(src)) {
+            throw new FileNotFoundException(src);
         }
         LOG.info("To convert to " + modelFormat + " format.");
         BufferedReader br = new BufferedReader(new FileReader(src));
@@ -128,9 +131,6 @@ public class ModelBuilder {
         }
         String extension = "." + resFormat;
         String srcPath = config.getFullPath(inKey);
-        if (!FileUtil.exist(srcPath)) {
-            throw new FileNotFoundException(srcPath);
-        }
         String defResPath = FilenameUtils.removeExtension(srcPath) + extension;
         return new String[]{
                 srcPath,
