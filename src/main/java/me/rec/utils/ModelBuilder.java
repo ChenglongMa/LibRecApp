@@ -115,9 +115,8 @@ public class ModelBuilder {
      * @param config
      * @param resFormat
      * @return
-     * @throws FileNotFoundException
      */
-    private static String[] getPaths(Config config, String resFormat) throws FileNotFoundException, NoSuchFieldException {
+    private static String[] getPaths(Config config, String resFormat) throws NoSuchFieldException {
         String inKey, outKey;
         switch (resFormat) {
             default:
