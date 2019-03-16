@@ -23,7 +23,7 @@ public class ModelBuilder {
         String src = paths[0];
         String res = paths[1];
         if (FileUtil.exist(res)) {
-            LOG.info("Such result file has existed.");
+            LOG.info("Such result file has existed: " + res);
             return;
         }
         if (!FileUtil.exist(src)) {
