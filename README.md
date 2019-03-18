@@ -32,14 +32,14 @@ The detailed configurations of this program and specific parameters of each algo
 
 1. The default configuration
    1. Specify the default settings such as the data directories, dataset path.
-   2. For more details, please refer to [default.properties](conf\default.properties).
+   2. For more details, please refer to [default.properties](conf/default.properties).
 2. The dataset information
    1. Specify the input path, data format, etc.
    2. For more details, please refer to [Dataset folder](conf/dataset).
-   3. **NB**: Will override same settings of [default.properties](conf\default.properties).
+   3. **NB**: Will override same settings of [default.properties](conf/default.properties).
 3. The Recommender algorithms parameters
    1. Specify parameters of each algorithms.
-   2. For more details, please refer to [Algorithms folder](conf\recommender).
+   2. For more details, please refer to [Algorithms folder](conf/recommender).
    3. **NB**: Will override same settings of files in [Dataset folder](conf/dataset).
    4. Some parameter templates are available at: [Algorithms Configuration](https://www.librec.net/dokuwiki/doku.php?id=AlgorithmList#algorithm_configuration_list).
 
