@@ -40,8 +40,8 @@ public class Job implements Runnable {
                 dataProp.load(dataFile);
                 String[] recs = config.getRecommenders();
                 for (String rec : recs) {
-                    String recPrefix = dataset + "-" + rec + "_";
-                    System.setProperty("rec_prefix", recPrefix);
+                    String recPrefix = dataset + "-" + rec;
+                    System.setProperty(Main.REC_PREFIX, recPrefix);
                     Properties recProp = new Properties();
                     FileReader recFile = config.getPropertyFile(rec);
                     recProp.putAll(dataProp);
