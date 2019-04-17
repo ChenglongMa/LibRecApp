@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class ModelBuilder {
     private static final Logger LOG = LogManager.getLogger(ModelBuilder.class);
 
-    public static void build(Config config, String modelFormat) throws IOException, NoSuchFieldException {
+    public static void build(Config config, String modelFormat) throws IOException {
         String[] paths = getPaths(config, modelFormat);
         String src = paths[0];
         String res = paths[1];
@@ -116,7 +116,7 @@ public class ModelBuilder {
      * @param resFormat
      * @return
      */
-    private static String[] getPaths(Config config, String resFormat) throws NoSuchFieldException {
+    private static String[] getPaths(Config config, String resFormat) throws FileNotFoundException {
         String inKey, outKey;
         switch (resFormat) {
             default:

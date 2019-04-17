@@ -83,10 +83,10 @@ public class Config extends Configuration {
         return new FileReader(propValue);
     }
 
-    public String getFullPath(String subKey) throws NoSuchFieldException {
+    public String getFullPath(String subKey) throws FileNotFoundException {
         String subPath = get(subKey);
         if (StringUtils.isBlank(subPath)) {
-            throw new NoSuchFieldException(subKey);
+            throw new FileNotFoundException("key: " + subKey);
         }
         return get(Configured.CONF_DFS_DATA_DIR) + "/" + subPath;
     }
