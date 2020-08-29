@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "6.0.0"
+}
+
+group 'me'
+version '1.0-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+javadoc.options.encoding = 'UTF-8'
+
+// Output to build/libs/name.jar
+shadowJar {
+    archiveBaseName = 'lib-rec'
+    classifier = null
+    archiveVersion = '1.0'
+//    minimize()
+}
+
+jar {
+    manifestContentCharset 'utf-8'
+    metadataCharset 'utf-8'
+    manifest {
+        attributes "Main-Class": "Main"
+    }
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/commons-logging/commons-logging
+    implementation group: 'commons-logging', name: 'commons-logging', version: '1.2'
+    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
+    // https://mvnrepository.com/artifact/com.squareup.okio/okio
+    implementation group: 'com.squareup.okio', name: 'okio', version: '2.8.0'
+    // https://mvnrepository.com/artifact/it.unimi.dsi/fastutil
+    implementation group: 'it.unimi.dsi', name: 'fastutil', version: '8.4.1'
+    // https://mvnrepository.com/artifact/me.tongfei/progressbar
+    implementation group: 'me.tongfei', name: 'progressbar', version: '0.8.1'
+
+
+    // Core DL4J functionality
+    // https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core
+    implementation group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '0.9.1'
+    // https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-nlp
+    implementation group: 'org.deeplearning4j', name: 'deeplearning4j-nlp', version: '0.9.1'
+    // https://mvnrepository.com/artifact/org.nd4j/nd4j-native-platform
+    implementation group: 'org.nd4j', name: 'nd4j-native-platform', version: '0.9.1'
+
+
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
