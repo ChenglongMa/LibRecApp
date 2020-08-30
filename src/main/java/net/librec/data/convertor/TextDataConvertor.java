@@ -189,10 +189,10 @@ public class TextDataConvertor extends AbstractDataConvertor {
                 e.printStackTrace();
             }
         }
-        List<Double> ratingScale = matrix.getRatingScale();
-        if (ratingScale != null) {
-            LOG.info(String.format("rating Scale: %s", ratingScale.toString()));
-        }
+//        List<Double> ratingScale = matrix.getRatingScale();
+//        if (ratingScale != null) {
+//            LOG.info(String.format("rating Scale: %s", ratingScale.toString()));
+//        }
         LOG.info(String.format("user number: %d,\t item number is: %d", matrix.numUsers(), matrix.numItems()));
     }
 
