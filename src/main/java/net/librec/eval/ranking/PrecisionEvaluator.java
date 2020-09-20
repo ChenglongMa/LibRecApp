@@ -31,7 +31,7 @@ public class PrecisionEvaluator extends AbstractRecommenderEvaluator {
                 List<KeyValue<Integer, Double>> recommendListByContext = recommendedList.getKeyValueListByContext(contextIdx);
 
                 int numHits = 0;
-                int topK = this.topN <= recommendListByContext.size() ? this.topN : recommendListByContext.size();
+                int topK = Math.min(this.topN, recommendListByContext.size());
                 for (int indexOfKey = 0; indexOfKey < topK; ++indexOfKey) {
                     int key = recommendListByContext.get(indexOfKey).getKey();
                     if (testSetByContext.contains(key)) {

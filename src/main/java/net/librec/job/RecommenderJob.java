@@ -219,8 +219,8 @@ public class RecommenderJob {
             String[] evalClassKeys = conf.getStrings("rec.eval.classes");
             if (evalClassKeys != null && evalClassKeys.length > 0) {// Run the evaluator which is
                 // designated.
-                for (int classIdx = 0; classIdx < evalClassKeys.length; ++classIdx) {
-                    RecommenderEvaluator evaluator = ReflectionUtil.newInstance(getEvaluatorClass(evalClassKeys[classIdx]), null);
+                for (String evalClassKey : evalClassKeys) {
+                    RecommenderEvaluator evaluator = ReflectionUtil.newInstance(getEvaluatorClass(evalClassKey), null);
                     evaluator.setTopN(conf.getInt("rec.recommender.ranking.topn", 10));
 
                     double evalValue = evaluator.evaluate(evalContext);
@@ -250,13 +250,25 @@ public class RecommenderJob {
                     }
                 }
                 if (evaluatedMap.size() > 0) {
+                    // make output path
+                    String algoSimpleName = DriverClassUtil.getDriverName(getRecommenderClass());
+                    String resPrefix = conf.get("dfs.result.dir.prefix", "") + "/";
+                    String outputPath = conf.get("dfs.result.dir") + "/" + resPrefix + conf.get("data.input.path") + "-" + algoSimpleName + "-evaluation/" + algoSimpleName;
+                    if (null != dataModel && (dataModel.getDataSplitter() instanceof KCVDataSplitter || dataModel.getDataSplitter() instanceof LOOCVDataSplitter) && null != conf.getInt("data.splitter.cv.index")) {
+                        outputPath = outputPath + "-" + conf.getInt("data.splitter.cv.index");
+                    }
+                    LOG.info("Evaluation result path is " + outputPath);
+                    StringBuilder sb = new StringBuilder();
+
                     for (Map.Entry<MeasureValue, Double> entry : evaluatedMap.entrySet()) {
                         String evalName = null;
                         if (entry != null && entry.getKey() != null) {
                             if (entry.getKey().getTopN() != null && entry.getKey().getTopN() > 0) {
+                                sb.append(entry.getKey().getMeasure()).append(",").append(entry.getKey().getTopN()).append(",").append(entry.getValue()).append("\n");
                                 LOG.info("Evaluator value:" + entry.getKey().getMeasure() + " top " + entry.getKey().getTopN() + " is " + entry.getValue());
                                 evalName = entry.getKey().getMeasure() + " top " + entry.getKey().getTopN();
                             } else {
+                                sb.append(entry.getKey().getMeasure()).append(",").append("NaN").append(",").append(entry.getValue()).append("\n");
                                 LOG.info("Evaluator value:" + entry.getKey().getMeasure() + " is " + entry.getValue());
                                 evalName = entry.getKey().getMeasure() + "";
                             }
@@ -264,6 +276,11 @@ public class RecommenderJob {
                                 collectCVResults(evalName, entry.getValue());
                             }
                         }
+                    }
+                    try {
+                        FileUtil.writeString(outputPath, sb.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -274,17 +291,17 @@ public class RecommenderJob {
      * Save result.
      *
      * @param recommendedList list of recommended items
-     * @throws LibrecException        if error occurs
      * @throws IOException            if I/O error occurs
      * @throws ClassNotFoundException if class not found error occurs
      */
-    public void saveResult(List<RecommendedItem> recommendedList) throws LibrecException, IOException, ClassNotFoundException {
+    public void saveResult(List<RecommendedItem> recommendedList) throws IOException, ClassNotFoundException {
         if (recommendedList != null && recommendedList.size() > 0) {
             // make output path
             String algoSimpleName = DriverClassUtil.getDriverName(getRecommenderClass());
-            String outputPath = conf.get("dfs.result.dir") + "/" + conf.get("data.input.path") + "-" + algoSimpleName + "-output/" + algoSimpleName;
+            String resPrefix = conf.get("dfs.result.dir.prefix", "") + "/";
+            String outputPath = conf.get("dfs.result.dir") + "/" + resPrefix + conf.get("data.input.path") + "-" + algoSimpleName + "-output/" + algoSimpleName;
             if (null != dataModel && (dataModel.getDataSplitter() instanceof KCVDataSplitter || dataModel.getDataSplitter() instanceof LOOCVDataSplitter) && null != conf.getInt("data.splitter.cv.index")) {
-                outputPath = outputPath + "-" + String.valueOf(conf.getInt("data.splitter.cv.index"));
+                outputPath = outputPath + "-" + conf.getInt("data.splitter.cv.index");
             }
             LOG.info("Result path is " + outputPath);
             // convert itemList to string
