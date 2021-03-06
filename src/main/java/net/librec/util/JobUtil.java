@@ -37,7 +37,7 @@ public class JobUtil {
      * @return a new job id
      */
     public static String generateNewJobId() {
-        return (new StringBuilder(JOB).append("_").append(generateNewIdentifier()).append("_").append(getIdentifierId())).toString();
+        return JOB + "_" + generateNewIdentifier() + "_" + getIdentifierId();
     }
 
     /**

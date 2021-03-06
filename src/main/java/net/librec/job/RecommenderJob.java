@@ -41,6 +41,7 @@ import net.librec.util.JobUtil;
 import net.librec.util.ReflectionUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import utils.Config;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class RecommenderJob {
      */
     protected final Log LOG = LogFactory.getLog(RecommenderJob.class);
 
-    private Configuration conf;
+    private final Configuration conf;
 
     private DataModel dataModel;
 
@@ -253,15 +254,18 @@ public class RecommenderJob {
                     // make output path
                     String algoSimpleName = DriverClassUtil.getDriverName(getRecommenderClass());
                     String resPrefix = conf.get("dfs.result.dir.prefix", "") + "/";
-                    String outputPath = conf.get("dfs.result.dir") + "/" + resPrefix + conf.get("data.input.path") + "-" + algoSimpleName + "-evaluation/" + algoSimpleName;
+                    String outputPath = conf.get("dfs.result.dir") + "/" + resPrefix + algoSimpleName + "/evaluation/" + conf.get(Config.DATA_INPUT_PATH) + "-" + conf.get(Config.TEST_DATA_PATH);
                     if (null != dataModel && (dataModel.getDataSplitter() instanceof KCVDataSplitter || dataModel.getDataSplitter() instanceof LOOCVDataSplitter) && null != conf.getInt("data.splitter.cv.index")) {
                         outputPath = outputPath + "-" + conf.getInt("data.splitter.cv.index");
+                    }
+                    if (conf.getBoolean(Config.IS_RANKING)) {
+                        outputPath += "-top-" + conf.get(Config.TOPN);
                     }
                     LOG.info("Evaluation result path is " + outputPath);
                     StringBuilder sb = new StringBuilder();
 
                     for (Map.Entry<MeasureValue, Double> entry : evaluatedMap.entrySet()) {
-                        String evalName = null;
+                        String evalName;
                         if (entry != null && entry.getKey() != null) {
                             if (entry.getKey().getTopN() != null && entry.getKey().getTopN() > 0) {
                                 sb.append(entry.getKey().getMeasure()).append(",").append(entry.getKey().getTopN()).append(",").append(entry.getValue()).append("\n");
@@ -299,9 +303,12 @@ public class RecommenderJob {
             // make output path
             String algoSimpleName = DriverClassUtil.getDriverName(getRecommenderClass());
             String resPrefix = conf.get("dfs.result.dir.prefix", "") + "/";
-            String outputPath = conf.get("dfs.result.dir") + "/" + resPrefix + conf.get("data.input.path") + "-" + algoSimpleName + "-output/" + algoSimpleName;
+            String outputPath = conf.get("dfs.result.dir") + "/" + resPrefix + algoSimpleName + "/output/" + conf.get(Config.DATA_INPUT_PATH) + "-" + conf.get(Config.TEST_DATA_PATH);
             if (null != dataModel && (dataModel.getDataSplitter() instanceof KCVDataSplitter || dataModel.getDataSplitter() instanceof LOOCVDataSplitter) && null != conf.getInt("data.splitter.cv.index")) {
                 outputPath = outputPath + "-" + conf.getInt("data.splitter.cv.index");
+            }
+            if (conf.getBoolean(Config.IS_RANKING)) {
+                outputPath += "-top-" + conf.get(Config.TOPN);
             }
             LOG.info("Result path is " + outputPath);
             // convert itemList to string

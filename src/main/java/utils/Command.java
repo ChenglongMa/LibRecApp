@@ -16,8 +16,8 @@ public class Command {
     private static final Logger LOG = LogManager.getLogger(Command.class);
     private final String[] defDatasets;
     private final String[] defRecommenders;
-    private int cv;
-    private boolean split;
+    private Integer cv, topn;
+    private boolean split, isRanking;
 
     public Command() throws IOException {
         Config defConf = new Config();
@@ -25,6 +25,8 @@ public class Command {
         defRecommenders = defConf.getRecommenders();
         cv = defConf.getInt(Config.CV_NUM);
         split = defConf.getLong(Config.RANDOM_SEED) == 1L;
+        topn = defConf.getInt(Config.TOPN);
+        isRanking = defConf.getBoolean(Config.IS_RANKING);
     }
 
     /**
@@ -66,9 +68,20 @@ public class Command {
 
         // example: to re-split the dataset
         // -s
+        String isRankingDesc = String.format("Whether to evaluate ranking performance, default: %s\n", isRanking) +
+                String.format("Rating test if value == false\n-%s won't work if value == false\n---", Opt.TOPN);
+        options.addOption(Opt.IS_RANKING, "isranking", false, isRankingDesc);
+
+        // example: topn ranking
+        // -topn 10
+        String topnDesc = String.format("The number of topn, default: %d\n---", topn);
+        options.addOption(Opt.TOPN, true, topnDesc);
+
+        // example: to re-split the dataset
+        // -s
         String splitDesc = "Whether to re-split the dataset, default: false\n" +
                 "(Would split if there is no such subsets)\n---";
-        options.addOption(Opt.SPLIT, "split", false,
+        options.addOption(Opt.SPLIT, "tosplit", false,
                 splitDesc);
 
         // example: using recommender "userknn", "itemknn" and "slopeone"
@@ -119,9 +132,18 @@ public class Command {
             LOG.info("The number of folds for cross validation: " + cv);
 
             split = cmd.hasOption(Opt.SPLIT);
-            long other = System.currentTimeMillis();//TODO: to be specified
+            long other = System.currentTimeMillis();
             prop.setProperty(Config.RANDOM_SEED, String.valueOf(split ? other : 1));
             LOG.info("(re-)Split? :" + split);
+
+            isRanking = cmd.hasOption(Opt.IS_RANKING);
+            prop.setProperty(Config.IS_RANKING, String.valueOf(isRanking));
+            LOG.info("Is Ranking JOB? :" + isRanking);
+
+            if (cmd.hasOption(Opt.TOPN)) {
+                topn = Integer.parseInt(cmd.getOptionValue(Opt.TOPN));
+                prop.setProperty(Config.TOPN, String.valueOf(topn));
+            }
 
             String[] recs = defRecommenders.clone();
             if (cmd.hasOption(Opt.RECOMMENDER)) {
@@ -148,5 +170,7 @@ public class Command {
         static final String SPLIT = "s";
         static final String DATASET = "d";
         static final String CV = "cv";
+        static final String IS_RANKING = "rank";
+        static final String TOPN = "topn";
     }
 }

@@ -91,7 +91,7 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
     /**
      * List of configuration resources.
      */
-    private ArrayList<Resource> resources = new ArrayList<Resource>();
+    private final ArrayList<Resource> resources = new ArrayList<>();
 
     {
         classLoader = Thread.currentThread().getContextClassLoader();
@@ -376,13 +376,13 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
 
     public boolean getBoolean(String name) {
         String value = get(name);
-        return StringUtils.isNotBlank(value) ? Boolean.valueOf(value) : false;
+        return StringUtils.isNotBlank(value) && Boolean.parseBoolean(value);
     }
 
     public boolean getBoolean(String name, boolean defaultValue) {
         String value = get(name);
         if (StringUtils.isNotBlank(value)) {
-            return Boolean.valueOf(value);
+            return Boolean.parseBoolean(value);
         } else {
             return defaultValue;
         }

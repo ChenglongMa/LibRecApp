@@ -10,15 +10,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * @author Chenglong Ma
  */
 public class Config extends Configuration {
     public static final String CV_NUM = "data.splitter.cv.number";
+    public static final String IS_RANKING = "rec.recommender.isranking";
+    public static final String TOPN = "rec.recommender.ranking.topn";
     public static final String RANDOM_SEED = "rec.random.seed";
-    public static final String DATA_INPUT_PATH = "data.input.path";
+    public static final String DATA_INPUT_PATH = Configured.CONF_DATA_INPUT_PATH;
     public static final String TEXT_INPUT_PATH = "data.input.text.path";
     public static final String ARFF_INPUT_PATH = "data.input.arff.path";
     public static final String DATA_SEP = "data.convert.sep";
@@ -26,6 +31,9 @@ public class Config extends Configuration {
     public static final String DATASETS = "datasets";
     public static final String RECOMMENDERS = "recommenders";
     public static final String MODEL_FORMAT = "data.model.format";
+    public static final String TEST_DATA_PATH = "data.testset.path";
+    public static final String TRAIN_SUFFIXES = "data.input.path.suffixes";
+    public static final String TEST_SUFFIXES = "data.testset.path.suffixes";
 
     private static final Logger LOG = LogManager.getLogger(Config.class);
     private static final String ROOT = System.getProperty("user.dir") + File.separator;
@@ -49,11 +57,23 @@ public class Config extends Configuration {
         }
     }
 
+    public Config(Config other) throws IOException {
+        this(other.getProps());
+    }
+
     /**
      * @return the recommender array in the configuration.
      */
     public String[] getRecommenders() {
         return getStrings(RECOMMENDERS);
+    }
+
+    public String[] getTrainSetSuffixes() {
+        return getStrings(TRAIN_SUFFIXES);
+    }
+
+    public String[] getTestSetSuffixes() {
+        return getStrings(TEST_SUFFIXES);
     }
 
     /**
@@ -83,11 +103,8 @@ public class Config extends Configuration {
         return new FileReader(propValue);
     }
 
-    public String getFullPath(String subKey) throws NoSuchFieldException {
+    public String getFullPath(String subKey) {
         String subPath = get(subKey);
-        if (StringUtils.isBlank(subPath)) {
-            throw new NoSuchFieldException(subKey);
-        }
         return get(Configured.CONF_DFS_DATA_DIR) + "/" + subPath;
     }
 
@@ -99,8 +116,26 @@ public class Config extends Configuration {
         return get(Configured.CONF_DFS_DATA_DIR) + "/" + subPath;
     }
 
+    public List<String> getFullPaths(String subKey) {
+        return getFullPaths(subKey, null);
+    }
+
+    public List<String> getFullPaths(String subKey, String defaultSubPath) {
+        String subPath = get(subKey);
+        if (StringUtils.isBlank(subPath)) {
+            subPath = defaultSubPath;
+        }
+        String[] subPaths = subPath.trim().split("[,:]");
+        return Arrays.stream(subPaths).map(path -> get(Configured.CONF_DFS_DATA_DIR) + "/" + path).collect(Collectors.toList());
+    }
+
     public static class ModelFormat {
         public static final String TEXT = "text";
         public static final String ARFF = "arff";
+    }
+
+    @Override
+    public String toString() {
+        return getProps().toString();
     }
 }

@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
 /**
  * @author Chenglong Ma
  */
-public class ModelBuilder {
-    private static final Logger LOG = LogManager.getLogger(ModelBuilder.class);
+public class DataConverter {
+    private static final Logger LOG = LogManager.getLogger(DataConverter.class);
 
     public static void build(Config config, String modelFormat) throws IOException, NoSuchFieldException {
         String[] paths = getPaths(config, modelFormat);
@@ -45,7 +45,7 @@ public class ModelBuilder {
         String colFormat = config.get(Configured.CONF_DATA_COLUMN_FORMAT, "UIR");
         while (StringUtils.isNotBlank(row = br.readLine())) {
             String upperRow = row.toUpperCase().trim();
-            if (startsWith(upperRow, "%", "@RELATION", "@DATA", "@ATTRIBUTE")) {
+            if (startsWithAny(upperRow, "%", "@RELATION", "@DATA", "@ATTRIBUTE")) {
                 continue;
             }
             String[] cols = row.split(",");
@@ -114,7 +114,7 @@ public class ModelBuilder {
      * @return
      * @throws FileNotFoundException
      */
-    private static String[] getPaths(Config config, String resFormat) throws FileNotFoundException, NoSuchFieldException {
+    private static String[] getPaths(Config config, String resFormat) throws FileNotFoundException {
         String inKey, outKey;
         switch (resFormat) {
             default:
@@ -138,12 +138,7 @@ public class ModelBuilder {
         };
     }
 
-    private static boolean startsWith(String src, String... prefixs) {
-        for (String prefix : prefixs) {
-            if (src.startsWith(prefix)) {
-                return true;
-            }
-        }
-        return false;
+    private static boolean startsWithAny(String src, String... prefixes) {
+        return Arrays.stream(prefixes).anyMatch(src::startsWith);
     }
 }

@@ -100,7 +100,7 @@ public class KCVDataSplitter extends AbstractDataSplitter {
         if (kFold > 0) {
             assignMatrix = preferenceMatrix.clone();
             int numRates = preferenceMatrix.getNumEntries();
-            int numFold = kFold > numRates ? numRates : kFold;
+            int numFold = Math.min(kFold, numRates);
 
             // divide rating data into kfold sample of equal size
             List<Map.Entry<Integer, Double>> rdm = new ArrayList<>(numRates);
