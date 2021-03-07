@@ -19,6 +19,7 @@ shadowJar {
 //    minimize()
 }
 
+// Available since 2021-03-07
 jar {
     manifestContentCharset 'utf-8'
     metadataCharset 'utf-8'

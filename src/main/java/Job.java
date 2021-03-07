@@ -58,10 +58,7 @@ public class Job implements Runnable {
                     config = new Config(recProp);
 //                    buildFile(config);
                     LOG.info(String.format("Running <%s> job for <%s>", rec, dataset));
-                    for (Config subConf : buildDataSetConfs(config)) {
-                        run(subConf);
-//                        System.out.println(subConf);
-                    }
+                    buildDataSetConfs(config).forEach(this::run);
                 }
             } catch (Exception e) {
                 LOG.error(e);
