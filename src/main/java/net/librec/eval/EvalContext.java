@@ -76,13 +76,16 @@ public class EvalContext {
         int numUsers = testMatrix.rowSize();
         RecommendedList groundTruthList = new RecommendedList(numUsers);
         for (int userIdx = 0; userIdx < numUsers; ++userIdx) {
-            groundTruthList.addList(new ArrayList<KeyValue<Integer, Double>>());
+            groundTruthList.addList(new ArrayList</*KeyValue<Integer, Double>*/>());
         }
+        double threshold = conf.getDouble("data.relevant.rating.threshold", 0.0);
         for (MatrixEntry matrixEntry : testMatrix) {
             int userIdx = matrixEntry.row();
             int itemIdx = matrixEntry.column();
             double rating = matrixEntry.get();
-            groundTruthList.add(userIdx, itemIdx, rating);
+            if (rating >= threshold) {
+                groundTruthList.add(userIdx, itemIdx, rating);
+            }
         }
         return groundTruthList;
     }

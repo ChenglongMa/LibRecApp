@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'me'
-version '1.0-SNAPSHOT'
+version '2.0'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 compileJava.options.encoding = "UTF-8"
@@ -15,7 +15,7 @@ javadoc.options.encoding = 'UTF-8'
 shadowJar {
     archiveBaseName = 'lib-rec'
     classifier = null
-    archiveVersion = '1.0'
+    archiveVersion = '2.0'
 //    minimize()
 }
 
